@@ -60,6 +60,9 @@ const createStore = () => {
 			setUser(state){
 				localStorage.setItem("user",JSON.stringify(state.currentUser));
 			},
+			setToken(state,payload){
+				state.currentUser.token = payload;
+			},
 			loginFailed(state){
 				state.loading = false;
 				state.authErr = true;
@@ -105,7 +108,7 @@ const createStore = () => {
 						}).then((res) => {
 							resolve("authorised")
 						},(error)=>{
-							context.commit('logout');
+							// context.commit('logout');
 							reject("unauthorized")
 						});
 					});
@@ -132,7 +135,6 @@ const createStore = () => {
 			login(context,payload){
 				return new Promise((resolve, reject) => {
 					axios.post('/api/auth/login',payload).then((response)=>{
-						console.log(response)
 						context.commit('loginSuccess',response.data)
 						resolve('success')
 					},(error)=>{
@@ -155,6 +157,23 @@ const createStore = () => {
 							msg:"Registration failed",
 							status:"error"
 						})
+						reject('failed')
+					});
+				});
+			},
+			refreshToken(context){
+				return new Promise((resolve, reject) => {
+					axios.post('/api/auth/refresh',{
+						refresh:true
+					},{
+						headers:{
+							"Authorization":"Bearer "+context.state.currentUser.token
+						}
+					}).then((response)=>{
+						context.commit('setToken',response.data.access_token);
+						context.commit('setUser');
+						resolve('success')
+					},(error)=>{
 						reject('failed')
 					});
 				});
