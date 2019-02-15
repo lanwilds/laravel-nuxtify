@@ -32,7 +32,7 @@ Everything under a hood..!
 > Vuex State management System<br>
 ## Packages Used
 **Laravel Nuxt JS**
-https://github.com/cretueusebiu/laravel-nuxt<br>
+https://packagist.org/packages/pallares/laravel-nuxt<br>
 ## Sources
  **Laravel-PHP Framework**<br>
   https://laravel.com<br>
